@@ -1,5 +1,11 @@
 export default {
   async fetch(request: Request, env: any): Promise<Response> {
+    const url = new URL(request.url);
+
+    if (url.pathname !== "/api") {
+      return new Response("Not Found", { status: 404 });
+    }
+
     if (request.method === "OPTIONS") {
       return new Response(null, {
         headers: {
@@ -14,12 +20,12 @@ export default {
       return new Response("Method Not Allowed", { status: 405 });
     }
 
-    const body = await request.json();
+    const body: any = await request.json();
 
     const response = await fetch("https://api.openai.com/v1/responses", {
       method: "POST",
       headers: {
-        "Authorization": `Bearer ${env.OPENAI_API_KEY}`,
+        Authorization: `Bearer ${env.OPENAI_API_KEY}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
