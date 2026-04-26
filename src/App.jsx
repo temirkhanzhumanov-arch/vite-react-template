@@ -63,6 +63,9 @@ export default function App() {
   });
 
   const result = useMemo(() => calcTier(tier), [tier]);
+  const [aiAnswer, setAiAnswer] = useState("");
+  const [aiLoading, setAiLoading] = useState(false);
+  const [aiError, setAiError] = useState("");
 
   function update(key, value) {
     setTier((prev) => ({
@@ -70,6 +73,71 @@ export default function App() {
       [key]: key === "stage" || key === "name" ? value : Number(value),
     }));
   }
+
+  async function askAI() {
+  setAiLoading(true);
+  setAiError("");
+  setAiAnswer("");
+
+  const prompt = `
+Ты эксперт по BIM, 4D/5D/6D моделированию строительной фазы АЭС.
+
+Проанализируй текущий строительный элемент:
+
+Название: ${tier.name}
+Стадия: ${tier.stage}
+Базовая длительность: ${tier.timeDays} дней
+Плановая длительность: ${tier.plannedDays} дней
+Прогресс: ${tier.progress} %
+Количество рабочих: ${tier.workers}
+Зарплата одного рабочего в день: ${tier.salaryPerDay} ₸
+Стоимость техники в день: ${tier.machineCostPerDay} ₸
+Базовая стоимость работ: ${tier.baseCost} ₸
+Простой / форс-мажор: ${tier.downtimeDays} дней
+Дополнительные расходы: ${tier.extraCost} ₸
+
+Расчетная длительность: ${result.duration} дней
+Задержка: ${result.delay} дней
+Стоимость труда: ${result.laborCost} ₸
+Стоимость техники: ${result.machineCost} ₸
+Итоговая стоимость: ${result.totalCost} ₸
+Статус: ${result.status}
+
+Дай краткий инженерный анализ:
+1. есть ли риск задержки;
+2. какие параметры сильнее всего влияют на задержку;
+3. как можно снизить задержку;
+4. как можно снизить расходы;
+5. что это означает с точки зрения BIM 4D/5D/6D.
+`;
+
+  try {
+    const res = await fetch("/api", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ prompt }),
+    });
+
+    if (!res.ok) {
+      throw new Error("Ошибка запроса к Worker");
+    }
+
+    const data = await res.json();
+
+    const text =
+      data.output?.[0]?.content?.[0]?.text ||
+      data.output_text ||
+      "Ответ получен, но текст не найден в response.";
+
+    setAiAnswer(text);
+  } catch (error) {
+    setAiError(error.message || "Неизвестная ошибка");
+  } finally {
+    setAiLoading(false);
+  }
+}
 
   return (
     <main className="page">
@@ -216,6 +284,22 @@ export default function App() {
             простой, количество работников, оплату труда, технику и
             дополнительные расходы.
           </p>
+          <button className="ai-button" onClick={askAI} disabled={aiLoading}>
+            {aiLoading ? "AI анализирует..." : "Получить AI-анализ"}
+          </button>
+          
+          {aiError && (
+            <div className="ai-error">
+              Ошибка: {aiError}
+            </div>
+          )}
+          
+          {aiAnswer && (
+            <div className="ai-answer">
+              <h3>AI-анализ</h3>
+              <pre>{aiAnswer}</pre>
+            </div>
+          )}
         </div>
       </section>
     </main>
