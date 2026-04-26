@@ -1,0 +1,148 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: #0d0f14;
+  color: #c8d0e0;
+  font-family: Arial, sans-serif;
+}
+
+.page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 28px;
+}
+
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #2a3045;
+  padding-bottom: 20px;
+  margin-bottom: 24px;
+}
+
+.eyebrow {
+  color: #f0a500;
+  font-size: 12px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+h1, h2 {
+  color: #eef2ff;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+}
+
+.card {
+  background: #141720;
+  border: 1px solid #2a3045;
+  border-top: 2px solid #f0a500;
+  padding: 22px;
+}
+
+label {
+  display: block;
+  margin-bottom: 16px;
+  color: #8b98b5;
+  font-size: 14px;
+}
+
+input, select {
+  width: 100%;
+  margin-top: 6px;
+  padding: 10px;
+  background: #1c2030;
+  border: 1px solid #2a3045;
+  color: #eef2ff;
+}
+
+input[type="range"] {
+  padding: 0;
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+}
+
+.kpi {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid #2a3045;
+  padding: 12px 0;
+}
+
+.kpi b {
+  color: #eef2ff;
+}
+
+.total {
+  margin-top: 20px;
+  padding: 18px;
+  background: rgba(240, 165, 0, 0.1);
+  border: 1px solid rgba(240, 165, 0, 0.4);
+  display: flex;
+  justify-content: space-between;
+}
+
+.total strong {
+  color: #f0a500;
+  font-size: 22px;
+}
+
+.pill {
+  padding: 8px 14px;
+  border-radius: 999px;
+  font-weight: bold;
+}
+
+.pill.ok {
+  background: rgba(76, 175, 125, 0.15);
+  color: #4caf7d;
+}
+
+.pill.danger {
+  background: rgba(224, 82, 82, 0.15);
+  color: #e05252;
+}
+
+.red {
+  color: #e05252 !important;
+}
+
+.green {
+  color: #4caf7d !important;
+}
+
+.bar {
+  margin-top: 24px;
+  height: 12px;
+  background: #1c2030;
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.bar div {
+  height: 100%;
+  background: #f0a500;
+}
+
+.note {
+  color: #6b7a99;
+  line-height: 1.6;
+  margin-top: 18px;
+}
+
+@media (max-width: 800px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}
